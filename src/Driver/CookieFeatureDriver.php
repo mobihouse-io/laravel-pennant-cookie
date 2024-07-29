@@ -11,7 +11,6 @@ class CookieFeatureDriver implements Driver
 {
     public function __construct(
         protected array $featureStateResolvers = [],
-        protected array $resolvedFeatureStates = [],
         protected stdClass $unknownFeatureValue = new stdClass()
     ) {
     }
@@ -34,9 +33,9 @@ class CookieFeatureDriver implements Driver
     public function get(string $feature, mixed $scope): mixed
     {
         $key = Feature::serializeScope($scope);
-
-        if (isset($this->resolvedFeatureStates[$feature][$key])) {
-            return $this->resolvedFeatureStates[$feature][$key];
+        $result = Cookie::get(sprintf('%s:%s', $feature, $key));
+        if ($result) {
+            return $result;
         }
 
         return with($this->resolveValue($feature, $scope), function ($value) use ($feature, $key) {
@@ -60,11 +59,10 @@ class CookieFeatureDriver implements Driver
 
     public function set(string $feature, mixed $scope, mixed $value): void
     {
-        $this->resolvedFeatureStates[$feature] ??= [];
-        $this->resolvedFeatureStates[$feature][Feature::serializeScope($scope)] = $value;
+        $key = Feature::serializeScope($scope);
 
         // TODO: resolve cookie lenght from config
-        Cookie::queue(sprintf('%s:%s', $feature, $scope), $value, 3600);
+        Cookie::queue(sprintf('%s:%s', $feature, $key), $value, 3600);
     }
 
     public function setForAllScopes(string $feature, mixed $value): void

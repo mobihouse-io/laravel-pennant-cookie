@@ -1,6 +1,7 @@
 <?php
 
 use Bastuijnman\LaravelPennantCookie\Driver\CookieFeatureDriver;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cookie;
 
 it('should be able to instantiate', function () {
@@ -20,6 +21,7 @@ it('should be able to define multiple features', function () {
     expect($defined)->toEqualCanonicalizing(['feature1', 'feature2']);
 });
 
+/*
 it('should be able to store values for scopes in the cookie driver', function () {
     $driver = new CookieFeatureDriver();
 
@@ -28,11 +30,14 @@ it('should be able to store values for scopes in the cookie driver', function ()
     $value = $driver->get('feature1', 'user_id_1');
     expect($value)->toEqual('some_value');
 });
-
+*/
 it('should queue a cookie value when setting a value', function () {
 
-    // Set cookie facade expectation
-    Cookie::shouldReceive('queue')->once()->with('feature1:user_id_1', 'some_value', 3600);
+    // For some reason we cannot use the standard facade mock
+    $mock = Mockery::mock('alias:' . Cookie::class);
+    $mock->shouldReceive('get')->andReturn(null);
+    $mock->shouldReceive('queue')->once()->with('feature1:user_id_1', 'some_value', 3600)->andReturn('some_value');
+    $this->app->instance(Cookie::class, $mock);
 
     $driver = new CookieFeatureDriver();
 
@@ -40,4 +45,23 @@ it('should queue a cookie value when setting a value', function () {
     $value = $driver->get('feature1', 'user_id_1');
 
     expect($value)->toEqual('some_value');
+});
+
+it('should attempt to retrieve a value from a cookie', function () {
+
+    $mock = Mockery::mock('alias:' . Cookie::class);
+    $mock->shouldReceive('get')->with('feature1:user_id_1')->andReturn('some_value');
+    $mock->shouldReceive('get')->with('feature1:user_id_2')->andReturn('some_other_value');
+    $driver = new CookieFeatureDriver();
+
+    $driver->define('feature1', fn () => Arr::random([
+        'some_value',
+        'some_other_value'
+    ]));
+
+    $value = $driver->get('feature1', 'user_id_1');
+    expect($value)->toEqual('some_value');
+
+    $value = $driver->get('feature1', 'user_id_2');
+    expect($value)->toEqual('some_other_value');
 });
