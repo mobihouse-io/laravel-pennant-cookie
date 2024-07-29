@@ -9,7 +9,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Bastuijnman\\LaravelPennantCookie\\": "src/"
+            "Bastuijnman\\LaravelPennantCookie\\": "src/",
+            "Tests\\": "tests/"
         }
     },
     "authors": [
