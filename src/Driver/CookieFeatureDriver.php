@@ -6,15 +6,19 @@ use Laravel\Pennant\Contracts\Driver;
 
 class CookieFeatureDriver implements Driver
 {
+    public function __construct(
+        protected array $featureStateResolvers = []
+    ) {
+    }
+
     public function define(string $feature, callable $resolver): void
     {
-        // TODO
+        $this->featureStateResolvers[$feature] = $resolver;
     }
 
     public function defined(): array
     {
-        // TODO
-        return [];
+        return array_keys($this->featureStateResolvers);
     }
 
     public function getAll(array $features): array
