@@ -21,16 +21,6 @@ it('should be able to define multiple features', function () {
     expect($defined)->toEqualCanonicalizing(['feature1', 'feature2']);
 });
 
-/*
-it('should be able to store values for scopes in the cookie driver', function () {
-    $driver = new CookieFeatureDriver();
-
-    $driver->set('feature1', 'user_id_1', 'some_value');
-
-    $value = $driver->get('feature1', 'user_id_1');
-    expect($value)->toEqual('some_value');
-});
-*/
 it('should queue a cookie value when setting a value', function () {
 
     // For some reason we cannot use the standard facade mock
