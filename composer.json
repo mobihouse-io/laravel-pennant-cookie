@@ -1,0 +1,28 @@
+{
+    "name": "bastuijnman/laravel-pennant-cookie",
+    "description": "A cookie driver for Laravel Pennant",
+    "type": "library",
+    "require-dev": {
+        "orchestra/testbench": "^9.2",
+        "pestphp/pest": "^2.34"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Bastuijnman\\LaravelPennantCookie\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bas Tuijnman"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "require": {
+        "laravel/pennant": "^1.10"
+    }
+}
