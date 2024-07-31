@@ -3,7 +3,6 @@
 use Mobihouse\LaravelPennantCookie\Driver\CookieFeatureDriver;
 use Illuminate\Support\Facades\Cookie;
 use Laravel\Pennant\Feature;
-use Mobihouse\LaravelPennantCookie\Exceptions\NotSupportedException;
 
 it('should be able to instantiate', function () {
     $driver = new CookieFeatureDriver();
@@ -40,8 +39,3 @@ it('should queue a cookie value when setting a value', function () {
 
     expect($value)->toEqual('some_value');
 });
-
-it('should throw an exception when trying to set values for all scopes', function () {
-    $driver = new CookieFeatureDriver();
-    $driver->setForAllScopes('some_feature', 'some_value');
-})->throws(NotSupportedException::class);

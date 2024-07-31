@@ -2,6 +2,7 @@
 
 namespace Mobihouse\LaravelPennantCookie\Driver;
 
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cookie;
@@ -9,6 +10,8 @@ use Laravel\Pennant\Contracts\Driver;
 use Laravel\Pennant\Feature;
 use Mobihouse\LaravelPennantCookie\Exceptions\NotSupportedException;
 use stdClass;
+
+use function Pest\Laravel\withCookie;
 
 class CookieFeatureDriver implements Driver
 {
@@ -72,6 +75,10 @@ class CookieFeatureDriver implements Driver
         });
     }
 
+    /**
+     * Get list of values from the cookie & cache them
+     * on the instance
+     */
     protected function getCookieValues(): array
     {
         if ($this->cachedCookieValues !== null) {
@@ -80,7 +87,7 @@ class CookieFeatureDriver implements Driver
 
         $values = Cookie::get(self::COOKIE_NAME);
         if ($values !== null) {
-            return json_decode($values, true);
+            return json_decode($values, true) ?? [];
         }
 
         return [];
@@ -114,7 +121,20 @@ class CookieFeatureDriver implements Driver
 
     public function setForAllScopes(string $feature, mixed $value): void
     {
-        throw new NotSupportedException('Setting values for all scopes is not possible yet');
+        $values = $this->getCookieValues();
+
+        $values = Collection::make($values)
+            ->map(
+                fn ($scopes) => Collection::make($scopes)
+                ->map(fn () => $value)
+                ->all()
+            )
+            ->all();
+
+        $this->cachedCookieValues = $values;
+
+        // TODO: resolve cookie length from config
+        Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
     }
 
     public function delete(string $feature, mixed $scope): void

@@ -14,6 +14,10 @@ defineEnvironment(function (Application $app) {
 
 defineRoutes(function (Router $router) {
     $router->get('feature-route', fn () => Feature::value('some-feature'))->middleware('web');
+    $router->get('change', function () {
+        Feature::activateForEveryone('feature1', 'overridden-value');
+        Feature::activateForEveryone('feature2', 'overridden-value');
+    })->middleware('web');
 });
 
 it('should be able to configure pennant using the cookie driver', function () {
@@ -58,4 +62,36 @@ it('should return a cookie for a resolved feature', function () {
         ->get('/feature-route')
         ->assertSee('some-feature-value')
         ->assertCookie($cookieKey, $cookieValue);
+});
+
+it('should be able to set values for all scopes', function () {
+
+    $scope1 = Feature::serializeScope('scope1');
+    $scope2 = Feature::serializeScope('scope2');
+
+    $cookieKey = 'laravel_pennant_cookie';
+    $cookieValue = json_encode([
+        'feature1' => [
+            $scope1 => 'feature1-value',
+            $scope2 => 'some-other-feature',
+        ],
+        'feature2' => [
+            $scope1 => 'feature2-value',
+            $scope2 => 'some-other-feature2',
+        ],
+    ]);
+
+    $this
+        ->withCookie($cookieKey, $cookieValue)
+        ->get('/change')
+        ->assertCookie($cookieKey, json_encode([
+            'feature1' => [
+                $scope1 => 'overridden-value',
+                $scope2 => 'overridden-value',
+            ],
+            'feature2' => [
+                $scope1 => 'overridden-value',
+                $scope2 => 'overridden-value',
+            ]
+        ]));
 });
