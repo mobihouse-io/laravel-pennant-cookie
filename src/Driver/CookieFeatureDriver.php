@@ -113,10 +113,8 @@ class CookieFeatureDriver implements Driver
 
         $values = $this->getCookieValues();
         Arr::set($values, sprintf('%s.%s', $feature, $key), $value);
-        $this->cachedCookieValues = $values;
 
-        // TODO: resolve cookie length from config
-        Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
+        $this->storeAndPushValues($values);
     }
 
     public function setForAllScopes(string $feature, mixed $value): void
@@ -131,10 +129,7 @@ class CookieFeatureDriver implements Driver
             )
             ->all();
 
-        $this->cachedCookieValues = $values;
-
-        // TODO: resolve cookie length from config
-        Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
+        $this->storeAndPushValues($values);
     }
 
     /*
@@ -147,8 +142,7 @@ class CookieFeatureDriver implements Driver
         Arr::pull($values, sprintf('%s.%s', $feature, Feature::serializeScope($scope)));
         $values = Arr::where($values, fn ($value) => !empty($value));
 
-        $this->cachedCookieValues = $values;
-        Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
+        $this->storeAndPushValues($values);
     }
 
     /**
@@ -167,7 +161,13 @@ class CookieFeatureDriver implements Driver
             Arr::pull($values, $feature);
         }
 
+        $this->storeAndPushValues($values);
+    }
+
+    protected function storeAndPushValues(array $values): array
+    {
         $this->cachedCookieValues = $values;
         Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
+        return $values;
     }
 }
