@@ -137,9 +137,18 @@ class CookieFeatureDriver implements Driver
         Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
     }
 
+    /*
+     * Delete a specific feature/scope
+     */
     public function delete(string $feature, mixed $scope): void
     {
-        // TODO
+        $values = $this->getCookieValues();
+
+        Arr::pull($values, sprintf('%s.%s', $feature, Feature::serializeScope($scope)));
+        $values = Arr::where($values, fn ($value) => !empty($value));
+
+        $this->cachedCookieValues = $values;
+        Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
     }
 
     /**
