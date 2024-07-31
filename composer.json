@@ -1,15 +1,16 @@
 {
-    "name": "bastuijnman/laravel-pennant-cookie",
+    "name": "mobihouse/laravel-pennant-cookie",
     "description": "A cookie driver for Laravel Pennant",
     "type": "library",
     "require-dev": {
         "orchestra/testbench": "^9.2",
-        "pestphp/pest": "^2.34"
+        "pestphp/pest": "^2.34",
+        "orchestra/pest-plugin-testbench": "^2.0"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Bastuijnman\\LaravelPennantCookie\\": "src/",
+            "Mobihouse\\LaravelPennantCookie\\": "src/",
             "Tests\\": "tests/"
         }
     },

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "62a9c1e04a6e8dd5da5b8a50da6679e7",
+    "content-hash": "addb7863b4a9e02c256f51b840247d81",
     "packages": [
         {
             "name": "brick/math",
@@ -6588,6 +6588,68 @@
             "time": "2024-03-06T10:00:21+00:00"
         },
         {
+            "name": "orchestra/pest-plugin-testbench",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orchestral/pest-plugin-testbench.git",
+                "reference": "1461fbf35fdca9a9b92433251975be37a7b332b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orchestral/pest-plugin-testbench/zipball/1461fbf35fdca9a9b92433251975be37a7b332b8",
+                "reference": "1461fbf35fdca9a9b92433251975be37a7b332b8",
+                "shasum": ""
+            },
+            "require": {
+                "orchestra/testbench": "^8.20 || ^9.0",
+                "pestphp/pest": "^2.12",
+                "pestphp/pest-plugin-laravel": "^2.2",
+                "php": "^8.1",
+                "symfony/polyfill-php82": "^1.28",
+                "symfony/polyfill-php83": "^1.28"
+            },
+            "require-dev": {
+                "ergebnis/phpstan-rules": "^2.1.0",
+                "laravel/pint": "^1.11",
+                "orchestra/testbench-dusk": "^8.22.2 || ^9.0.2",
+                "phpstan/phpstan": "^1.11",
+                "phpstan/phpstan-strict-rules": "^1.5.1",
+                "rector/rector": "^0.16.0 || ^1.0",
+                "symfony/var-dumper": "^6.3.3 || ^7.0",
+                "symplify/phpstan-rules": "^12.3.1",
+                "thecodingmachine/phpstan-strict-rules": "^1.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Autoload.php"
+                ],
+                "psr-4": {
+                    "Orchestra\\Testbench\\Pest\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Pest plugin for Testbench",
+            "keywords": [
+                "framework",
+                "pest",
+                "php",
+                "plugin",
+                "test",
+                "testing",
+                "unit"
+            ],
+            "support": {
+                "issues": "https://github.com/orchestral/pest-plugin-testbench/issues",
+                "source": "https://github.com/orchestral/pest-plugin-testbench/tree/v2.0.1"
+            },
+            "time": "2024-06-06T00:20:31+00:00"
+        },
+        {
             "name": "orchestra/testbench",
             "version": "v9.2.0",
             "source": {
@@ -7045,6 +7107,80 @@
                 }
             ],
             "time": "2024-01-26T09:46:42+00:00"
+        },
+        {
+            "name": "pestphp/pest-plugin-laravel",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pestphp/pest-plugin-laravel.git",
+                "reference": "53df51169a7f9595e06839cce638c73e59ace5e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pestphp/pest-plugin-laravel/zipball/53df51169a7f9595e06839cce638c73e59ace5e8",
+                "reference": "53df51169a7f9595e06839cce638c73e59ace5e8",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^10.48.9|^11.5.0",
+                "pestphp/pest": "^2.34.7",
+                "php": "^8.1.0"
+            },
+            "require-dev": {
+                "laravel/dusk": "^7.13.0",
+                "orchestra/testbench": "^8.22.3|^9.0.4",
+                "pestphp/pest-dev-tools": "^2.16.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Pest\\Laravel\\PestServiceProvider"
+                    ]
+                },
+                "pest": {
+                    "plugins": [
+                        "Pest\\Laravel\\Plugin"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Autoload.php"
+                ],
+                "psr-4": {
+                    "Pest\\Laravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The Pest Laravel Plugin",
+            "keywords": [
+                "framework",
+                "laravel",
+                "pest",
+                "php",
+                "test",
+                "testing",
+                "unit"
+            ],
+            "support": {
+                "source": "https://github.com/pestphp/pest-plugin-laravel/tree/v2.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/paypalme/enunomaduro",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/nunomaduro",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-04-27T10:41:54+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -9412,6 +9548,82 @@
                 }
             ],
             "time": "2024-05-31T15:07:36+00:00"
+        },
+        {
+            "name": "symfony/polyfill-php82",
+            "version": "v1.30.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php82.git",
+                "reference": "77ff49780f56906788a88974867ed68bc49fae5b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php82/zipball/77ff49780f56906788a88974867ed68bc49fae5b",
+                "reference": "77ff49780f56906788a88974867ed68bc49fae5b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php82\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 8.2+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php82/tree/v1.30.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-06-19T12:30:46+00:00"
         },
         {
             "name": "symfony/stopwatch",

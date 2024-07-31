@@ -1,6 +1,6 @@
 <?php
 
-namespace Bastuijnman\LaravelPennantCookie\Driver;
+namespace Mobihouse\LaravelPennantCookie\Driver;
 
 use Illuminate\Support\Facades\Cookie;
 use Laravel\Pennant\Contracts\Driver;
@@ -33,8 +33,7 @@ class CookieFeatureDriver implements Driver
     public function get(string $feature, mixed $scope): mixed
     {
         $key = Feature::serializeScope($scope);
-        $result = Cookie::get(sprintf('%s:%s', $feature, $key));
-        if ($result) {
+        if ($result = Cookie::get(sprintf('%s:%s', $feature, $key))) {
             return $result;
         }
 

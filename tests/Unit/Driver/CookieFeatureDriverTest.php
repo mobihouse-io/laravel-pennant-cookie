@@ -1,6 +1,6 @@
 <?php
 
-use Bastuijnman\LaravelPennantCookie\Driver\CookieFeatureDriver;
+use Mobihouse\LaravelPennantCookie\Driver\CookieFeatureDriver;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cookie;
 
@@ -23,7 +23,10 @@ it('should be able to define multiple features', function () {
 
 it('should queue a cookie value when setting a value', function () {
 
-    // For some reason we cannot use the standard facade mock
+    /*
+     * For some reason it's not possible to use the regular Facade testing
+     * mechanism. So we just create a manual mock & bind it.
+     */
     $mock = Mockery::mock('alias:' . Cookie::class);
     $mock->shouldReceive('get')->andReturn(null);
     $mock->shouldReceive('queue')->once()->with('feature1:user_id_1', 'some_value', 3600)->andReturn('some_value');
