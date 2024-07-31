@@ -142,8 +142,23 @@ class CookieFeatureDriver implements Driver
         // TODO
     }
 
+    /**
+     * Purge one or more features from storage
+     */
     public function purge(?array $features): void
     {
-        // TODO
+        if ($features === null) {
+            $this->cachedCookieValues = null;
+            Cookie::forget(self::COOKIE_NAME);
+            return;
+        }
+
+        $values = $this->getCookieValues();
+        foreach ($features as $feature) {
+            Arr::pull($values, $feature);
+        }
+
+        $this->cachedCookieValues = $values;
+        Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
     }
 }

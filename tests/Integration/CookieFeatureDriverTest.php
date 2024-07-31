@@ -14,10 +14,15 @@ defineEnvironment(function (Application $app) {
 
 defineRoutes(function (Router $router) {
     $router->get('feature-route', fn () => Feature::value('some-feature'))->middleware('web');
+
+    $router->get('values', fn () => Feature::all())->middleware('web');
+
     $router->get('change', function () {
         Feature::activateForEveryone('feature1', 'overridden-value');
         Feature::activateForEveryone('feature2', 'overridden-value');
     })->middleware('web');
+
+    $router->get('purge/{feature}', fn (string $feature) => Feature::purge([$feature]))->middleware('web');
 });
 
 it('should be able to configure pennant using the cookie driver', function () {
@@ -93,5 +98,20 @@ it('should be able to set values for all scopes', function () {
                 $scope1 => 'overridden-value',
                 $scope2 => 'overridden-value',
             ]
+        ]));
+});
+
+it('should be able to purge features', function () {
+    Feature::define('feature1', fn () => 'feature-1-value');
+    Feature::define('feature2', fn () => 'feature-2-value');
+    Feature::define('feature3', fn () => 'feature-3-value');
+
+    $response = $this->get('values');
+    $this
+        ->withCookie('laravel_pennant_cookie', $response->getCookie('laravel_pennant_cookie'))
+        ->get('purge/feature2')
+        ->assertCookie('laravel_pennant_cookie', json_encode([
+            'feature1' => [ Feature::serializeScope(null) => 'feature-1-value' ],
+            'feature3' => [ Feature::serializeScope(null) => 'feature-3-value' ],
         ]));
 });
