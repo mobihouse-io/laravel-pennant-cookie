@@ -22,7 +22,7 @@ defineRoutes(function (Router $router) {
         Feature::activateForEveryone('feature2', 'overridden-value');
     })->middleware('web');
 
-    $router->get('purge/{feature}', fn (string $feature) => Feature::purge([$feature]))->middleware('web');
+    $router->get('purge/{feature?}', fn (?string $feature = null) => Feature::purge($feature ? [$feature] : null))->middleware('web');
     $router->get('delete/{feature}', fn (string $feature) => Feature::delete($feature, null))->middleware('web');
 });
 
@@ -106,14 +106,22 @@ it('should be able to purge features', function () {
     Feature::define('feature1', fn () => 'feature-1-value');
     Feature::define('feature2', fn () => 'feature-2-value');
     Feature::define('feature3', fn () => 'feature-3-value');
+
     $response = $this->get('values');
+    $cookie = $response->getCookie('laravel_pennant_cookie');
+
     $this
-        ->withCookie('laravel_pennant_cookie', $response->getCookie('laravel_pennant_cookie'))
+        ->withCookie('laravel_pennant_cookie', $cookie)
         ->get('purge/feature2')
         ->assertCookie('laravel_pennant_cookie', json_encode([
             'feature1' => [ Feature::serializeScope(null) => 'feature-1-value' ],
             'feature3' => [ Feature::serializeScope(null) => 'feature-3-value' ],
         ]));
+
+    $this
+        ->withCookie('laravel_pennant_cookie', $cookie)
+        ->get('purge')
+        ->assertCookieExpired('laravel_pennant_cookie');
 });
 
 it('should be able to delete a feature', function () {

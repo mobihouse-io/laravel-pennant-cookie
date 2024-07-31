@@ -150,24 +150,28 @@ class CookieFeatureDriver implements Driver
      */
     public function purge(?array $features): void
     {
-        if ($features === null) {
-            $this->cachedCookieValues = null;
-            Cookie::forget(self::COOKIE_NAME);
-            return;
-        }
-
-        $values = $this->getCookieValues();
-        foreach ($features as $feature) {
-            Arr::pull($values, $feature);
+        $values = $features ? $this->getCookieValues() : null;
+        if ($features) {
+            foreach ($features as $feature) {
+                Arr::pull($values, $feature);
+            }
         }
 
         $this->storeAndPushValues($values);
     }
 
-    protected function storeAndPushValues(array $values): array
+    /**
+     * Store the values on the instance and queue a cookie
+     * for storage.
+     */
+    protected function storeAndPushValues(?array $values): ?array
     {
         $this->cachedCookieValues = $values;
-        Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
+        if ($values) {
+            Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
+        } else {
+            Cookie::expire(self::COOKIE_NAME);
+        }
         return $values;
     }
 }
