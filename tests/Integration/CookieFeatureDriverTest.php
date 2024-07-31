@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Foundation\Application;
-use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Laravel\Pennant\Feature;
 
