@@ -2,6 +2,8 @@
 
 use Mobihouse\LaravelPennantCookie\Driver\CookieFeatureDriver;
 use Illuminate\Support\Facades\Cookie;
+use Laravel\Pennant\Feature;
+use Mobihouse\LaravelPennantCookie\Exceptions\NotSupportedException;
 
 it('should be able to instantiate', function () {
     $driver = new CookieFeatureDriver();
@@ -22,12 +24,24 @@ it('should be able to define multiple features', function () {
 
 it('should queue a cookie value when setting a value', function () {
 
-    Cookie::shouldReceive('queue')->once()->with('feature1:user_id_1', 'some_value', 3600)->andReturn('some_value');
+    $feature = 'feature1';
+    $scope = 'user_id_1';
+    $expectation = [
+        'feature1' => [
+            Feature::serializeScope($scope) => 'some_value',
+        ],
+    ];
+    Cookie::shouldReceive('queue')->once()->with('laravel_pennant_cookie', json_encode($expectation), 3600)->andReturn('some_value');
 
     $driver = new CookieFeatureDriver();
 
-    $driver->define('feature1', fn () => 'some_value');
-    $value = $driver->get('feature1', 'user_id_1');
+    $driver->define($feature, fn () => 'some_value');
+    $value = $driver->get($feature, $scope);
 
     expect($value)->toEqual('some_value');
 });
+
+it('should throw an exception when trying to set values for all scopes', function () {
+    $driver = new CookieFeatureDriver();
+    $driver->setForAllScopes('some_feature', 'some_value');
+})->throws(NotSupportedException::class);

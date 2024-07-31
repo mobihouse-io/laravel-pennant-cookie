@@ -31,10 +31,15 @@ it('should be able to get a value from cookies', function () {
         false => 'some-other-feature-value',
     });
 
-    $cookieKey = sprintf('%s:%s', 'some-feature', Feature::serializeScope(null));
+    $cookieKey = 'laravel_pennant_cookie';
+    $cookieValue = json_encode([
+        'some-feature' => [
+            Feature::serializeScope(null) => 'some-other-feature-value'
+        ],
+    ]);
 
     $this
-        ->withCookie($cookieKey, 'some-other-feature-value')
+        ->withCookie($cookieKey, $cookieValue)
         ->get('/feature-route')
         ->assertSee('some-other-feature-value');
 });
@@ -42,9 +47,15 @@ it('should be able to get a value from cookies', function () {
 it('should return a cookie for a resolved feature', function () {
     Feature::define('some-feature', fn () => 'some-feature-value');
 
-    $cookieKey = sprintf('%s:%s', 'some-feature', Feature::serializeScope(null));
+    $cookieKey = 'laravel_pennant_cookie';
+    $cookieValue = json_encode([
+        'some-feature' => [
+            Feature::serializeScope(null) => 'some-feature-value',
+        ],
+    ]);
+
     $this
         ->get('/feature-route')
         ->assertSee('some-feature-value')
-        ->assertCookie($cookieKey, 'some-feature-value');
+        ->assertCookie($cookieKey, $cookieValue);
 });

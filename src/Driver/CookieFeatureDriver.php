@@ -2,14 +2,19 @@
 
 namespace Mobihouse\LaravelPennantCookie\Driver;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cookie;
 use Laravel\Pennant\Contracts\Driver;
 use Laravel\Pennant\Feature;
+use Mobihouse\LaravelPennantCookie\Exceptions\NotSupportedException;
 use stdClass;
 
 class CookieFeatureDriver implements Driver
 {
+    protected const COOKIE_NAME = 'laravel_pennant_cookie';
+    protected ?array $cachedCookieValues = null;
+
     public function __construct(
         protected array $featureStateResolvers = [],
         protected stdClass $unknownFeatureValue = new stdClass()
@@ -51,19 +56,34 @@ class CookieFeatureDriver implements Driver
     */
     public function get(string $feature, mixed $scope): mixed
     {
-        $key = Feature::serializeScope($scope);
-        if ($result = Cookie::get(sprintf('%s:%s', $feature, $key))) {
+        $scopeKey = Feature::serializeScope($scope);
+        $result = Arr::get($this->getCookieValues(), sprintf('%s.%s', $feature, $scopeKey));
+        if ($result) {
             return $result;
         }
 
-        return with($this->resolveValue($feature, $scope), function ($value) use ($feature, $key) {
+        return with($this->resolveValue($feature, $scope), function ($value) use ($feature, $scopeKey) {
             if ($value === $this->unknownFeatureValue) {
                 return false;
             }
-            $this->set($feature, $key, $value);
+            $this->set($feature, $scopeKey, $value);
 
             return $value;
         });
+    }
+
+    protected function getCookieValues(): array
+    {
+        if ($this->cachedCookieValues !== null) {
+            return $this->cachedCookieValues;
+        }
+
+        $values = Cookie::get(self::COOKIE_NAME);
+        if ($values !== null) {
+            return json_decode($values, true);
+        }
+
+        return [];
     }
 
     /**
@@ -84,13 +104,17 @@ class CookieFeatureDriver implements Driver
     {
         $key = Feature::serializeScope($scope);
 
-        // TODO: resolve cookie lenght from config
-        Cookie::queue(sprintf('%s:%s', $feature, $key), $value, 3600);
+        $values = $this->getCookieValues();
+        Arr::set($values, sprintf('%s.%s', $feature, $key), $value);
+        $this->cachedCookieValues = $values;
+
+        // TODO: resolve cookie length from config
+        Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
     }
 
     public function setForAllScopes(string $feature, mixed $value): void
     {
-        // TODO
+        throw new NotSupportedException('Setting values for all scopes is not possible yet');
     }
 
     public function delete(string $feature, mixed $scope): void
