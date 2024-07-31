@@ -16,16 +16,25 @@ class CookieFeatureDriver implements Driver
     ) {
     }
 
+    /**
+     * Define a feature on the driver
+     */
     public function define(string $feature, callable $resolver): void
     {
         $this->featureStateResolvers[$feature] = $resolver;
     }
 
+    /**
+     * Gets a list of all defined features.
+     */
     public function defined(): array
     {
         return array_keys($this->featureStateResolvers);
     }
 
+    /**
+     * Get values for all provided features/scopes.
+     */
     public function getAll(array $features): array
     {
         return Collection::make($features)
@@ -37,6 +46,9 @@ class CookieFeatureDriver implements Driver
             ->all();
     }
 
+    /**
+     * Get value for specific feature/scope.
+    */
     public function get(string $feature, mixed $scope): mixed
     {
         $key = Feature::serializeScope($scope);
@@ -55,6 +67,9 @@ class CookieFeatureDriver implements Driver
         });
     }
 
+    /**
+     * Resolve the value of a feature based on a scope.
+     */
     protected function resolveValue(string $feature, mixed $scope): mixed
     {
         if (!array_key_exists($feature, $this->featureStateResolvers)) {
@@ -63,6 +78,9 @@ class CookieFeatureDriver implements Driver
         return $this->featureStateResolvers[$feature]($scope);
     }
 
+    /**
+     * Set the value of a feature for a scope.
+     */
     public function set(string $feature, mixed $scope, mixed $value): void
     {
         $key = Feature::serializeScope($scope);
