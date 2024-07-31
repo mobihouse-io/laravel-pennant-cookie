@@ -60,7 +60,6 @@ class CookieFeatureDriver implements Driver
             if ($value === $this->unknownFeatureValue) {
                 return false;
             }
-
             $this->set($feature, $key, $value);
 
             return $value;

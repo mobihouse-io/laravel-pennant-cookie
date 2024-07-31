@@ -13,7 +13,7 @@ defineEnvironment(function (Application $app) {
 });
 
 defineRoutes(function (Router $router) {
-    $router->get('feature-route', fn () => Feature::value('some-feature'));
+    $router->get('feature-route', fn () => Feature::value('some-feature'))->middleware('web');
 });
 
 it('should be able to configure pennant using the cookie driver', function () {
@@ -34,7 +34,17 @@ it('should be able to get a value from cookies', function () {
     $cookieKey = sprintf('%s:%s', 'some-feature', Feature::serializeScope(null));
 
     $this
-        ->withUnencryptedCookie($cookieKey, 'some-other-feature-value')
+        ->withCookie($cookieKey, 'some-other-feature-value')
         ->get('/feature-route')
         ->assertSee('some-other-feature-value');
+});
+
+it('should return a cookie for a resolved feature', function () {
+    Feature::define('some-feature', fn () => 'some-feature-value');
+
+    $cookieKey = sprintf('%s:%s', 'some-feature', Feature::serializeScope(null));
+    $this
+        ->get('/feature-route')
+        ->assertSee('some-feature-value')
+        ->assertCookie($cookieKey, 'some-feature-value');
 });
