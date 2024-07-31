@@ -10,4 +10,5 @@
 | need to change it using the "uses()" function to bind a different classes or traits.
 |
 */
-uses(Tests\TestCase::class)->in(__DIR__);
+uses(Tests\TestCase::class)->in('Unit');
+uses(Tests\IntegrationTestCase::class)->in('Integration');

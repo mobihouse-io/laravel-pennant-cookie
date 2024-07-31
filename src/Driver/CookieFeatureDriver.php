@@ -2,6 +2,7 @@
 
 namespace Mobihouse\LaravelPennantCookie\Driver;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cookie;
 use Laravel\Pennant\Contracts\Driver;
 use Laravel\Pennant\Feature;
@@ -27,7 +28,13 @@ class CookieFeatureDriver implements Driver
 
     public function getAll(array $features): array
     {
-        return [];
+        return Collection::make($features)
+            ->map(
+                fn ($scopes, $feature) => Collection::make($scopes)
+                ->map(fn ($scope) => $this->get($feature, $scope))
+                ->all()
+            )
+            ->all();
     }
 
     public function get(string $feature, mixed $scope): mixed
