@@ -1,10 +1,7 @@
 <?php
 
 use Mobihouse\LaravelPennantCookie\Driver\CookieFeatureDriver;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
-use Laravel\Pennant\Feature;
 
 it('should be able to instantiate', function () {
     $driver = new CookieFeatureDriver();
