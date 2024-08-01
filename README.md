@@ -39,6 +39,25 @@ return [
 ]
 ```
 
+Now that the store is configured set your `PENNANT_STORE` environment variable to `cookie` (or
+set the `default` key in the pennant config to `cookie`).
+
+By default the cookie that gets set will live for a year, if you want to change the
+default lifetime you can do the following in the config:
+
+```php
+return [
+
+    'stores' => [
+        'cookie' => [
+            'driver' => 'cookie',
+            'lifetime' => 3600, // Live for one hour
+        ]
+    ]
+
+]
+```
+
 ## Tests
 
 Running the automated tests can be done by
