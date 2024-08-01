@@ -30,7 +30,9 @@ it('should queue a cookie value when setting a value', function () {
             Feature::serializeScope($scope) => 'some_value',
         ],
     ];
-    Cookie::shouldReceive('queue')->once()->with('laravel_pennant_cookie', json_encode($expectation), 3600)->andReturn('some_value');
+
+    // Ensure we set the cookie for a year by default
+    Cookie::shouldReceive('queue')->once()->with('laravel_pennant_cookie', json_encode($expectation), 525600)->andReturn('some_value');
 
     $driver = new CookieFeatureDriver();
 

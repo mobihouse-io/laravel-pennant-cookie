@@ -12,6 +12,10 @@ use stdClass;
 class CookieFeatureDriver implements Driver
 {
     protected const COOKIE_NAME = 'laravel_pennant_cookie';
+
+    // Live for a year by default
+    protected const COOKIE_DEFAULT_LIFETIME = 525600;
+
     protected ?array $cachedCookieValues = null;
 
     public function __construct(
@@ -165,7 +169,7 @@ class CookieFeatureDriver implements Driver
     {
         $this->cachedCookieValues = $values;
         if ($values) {
-            Cookie::queue(self::COOKIE_NAME, json_encode($values), Arr::get($this->config, 'lifetime', 3600));
+            Cookie::queue(self::COOKIE_NAME, json_encode($values), Arr::get($this->config, 'lifetime', self::COOKIE_DEFAULT_LIFETIME));
         } else {
             Cookie::expire(self::COOKIE_NAME);
         }
