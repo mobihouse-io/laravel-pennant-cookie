@@ -1,7 +1,7 @@
 {
     "name": "mobihouse/laravel-pennant-cookie",
     "description": "A cookie driver for Laravel Pennant",
-    "version": "1.0.0-beta1",
+    "version": "1.0.0-beta2",
     "type": "library",
     "require-dev": {
         "orchestra/testbench": "^9.2",
@@ -27,5 +27,12 @@
     },
     "require": {
         "laravel/pennant": "^1.10"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mobihouse\\LaravelPennantCookie\\LaravelPennantCookieServiceProvider"
+            ]
+        }
     }
 }
