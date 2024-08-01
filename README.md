@@ -42,6 +42,38 @@ return [
 Now that the store is configured set your `PENNANT_STORE` environment variable to `cookie` (or
 set the `default` key in the pennant config to `cookie`).
 
+### Scope
+
+Laravel Pennant will try to use the auth scope by default and thus look for a current user.
+Though the driver will work with this it isn't it's intended purpose, so the easiest way
+to use anonymised scope is setting the default scope to null:
+
+```php
+<?php
+ 
+namespace App\Providers;
+ 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Pennant\Feature;
+ 
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        Feature::resolveScopeUsing(fn () => null);
+ 
+        // ...
+    }
+}
+
+```
+
+### Options
+
 By default the cookie that gets set will live for a year, if you want to change the
 default lifetime you can do the following in the config:
 
