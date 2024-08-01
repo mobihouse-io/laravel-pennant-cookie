@@ -2,16 +2,12 @@
 
 namespace Mobihouse\LaravelPennantCookie\Driver;
 
-use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cookie;
 use Laravel\Pennant\Contracts\Driver;
 use Laravel\Pennant\Feature;
-use Mobihouse\LaravelPennantCookie\Exceptions\NotSupportedException;
 use stdClass;
-
-use function Pest\Laravel\withCookie;
 
 class CookieFeatureDriver implements Driver
 {
@@ -19,6 +15,7 @@ class CookieFeatureDriver implements Driver
     protected ?array $cachedCookieValues = null;
 
     public function __construct(
+        protected array $config = [],
         protected array $featureStateResolvers = [],
         protected stdClass $unknownFeatureValue = new stdClass()
     ) {
@@ -168,7 +165,7 @@ class CookieFeatureDriver implements Driver
     {
         $this->cachedCookieValues = $values;
         if ($values) {
-            Cookie::queue(self::COOKIE_NAME, json_encode($values), 3600);
+            Cookie::queue(self::COOKIE_NAME, json_encode($values), Arr::get($this->config, 'lifetime', 3600));
         } else {
             Cookie::expire(self::COOKIE_NAME);
         }

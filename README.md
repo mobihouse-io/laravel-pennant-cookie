@@ -5,14 +5,19 @@
 
 # Laravel Pennant - Cookie Driver
 
-This package adds the ability to remember feature flags/values from Laravel pennant in a cookie, which allows you to have persisted values for anonymous users.
+This package adds the ability to remember feature flags/values
+from Laravel pennant in a cookie, which allows you to have
+persisted values for anonymous users.
 
 > [!IMPORTANT]
-> This driver is most suited for tracking anonymous users, if you want to track actual users it will be more beneficial to use the database driver.
+> This driver is most suited for tracking anonymous users, if you
+> want to track actual users it will be more beneficial to use
+> the database driver.
 
 ## Usage
 
-Install the package using: 
+Install the package using:
+
 ```bash
 composer require mobihouse/laravel-pennant-cookie
 ```

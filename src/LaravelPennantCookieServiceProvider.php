@@ -11,6 +11,8 @@ class LaravelPennantCookieServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        Feature::extend('cookie', fn () => new CookieFeatureDriver());
+        Feature::extend('cookie', function (Application $app, array $config) {
+            return new CookieFeatureDriver();
+        });
     }
 }

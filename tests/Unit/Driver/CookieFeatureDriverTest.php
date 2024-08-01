@@ -39,3 +39,24 @@ it('should queue a cookie value when setting a value', function () {
 
     expect($value)->toEqual('some_value');
 });
+
+it('should queue a cookie with a specific lifetime when configuring', function () {
+    $driver = new CookieFeatureDriver(config: [
+
+        // Cookie lifetime of two weeks
+        'lifetime' => 20160,
+    ]);
+
+
+    $feature = 'feature1';
+    $scope = 'user_id_1';
+    $expectation = [
+        'feature1' => [
+            Feature::serializeScope($scope) => 'some_value',
+        ],
+    ];
+    Cookie::shouldReceive('queue')->once()->with('laravel_pennant_cookie', json_encode($expectation), 20160)->andReturn('some_value');
+
+    $driver->define($feature, fn () => 'some_value');
+    $driver->get($feature, $scope);
+});
