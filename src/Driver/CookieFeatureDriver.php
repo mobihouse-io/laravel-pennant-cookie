@@ -62,7 +62,7 @@ class CookieFeatureDriver implements Driver
     {
         $scopeKey = Feature::serializeScope($scope);
         $result = Arr::get($this->getCookieValues(), sprintf('%s.%s', $feature, $scopeKey));
-        if ($result) {
+        if ($result !== null) {
             return $result;
         }
 

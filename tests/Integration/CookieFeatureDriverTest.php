@@ -22,6 +22,7 @@ defineRoutes(function (Router $router) {
         Feature::activateForEveryone('feature2', 'overridden-value');
     })->middleware('web');
 
+    $router->get('value/{feature}', fn (string $feature) => var_export(Feature::value($feature), true))->middleware('web');
     $router->get('purge/{feature?}', fn (?string $feature = null) => Feature::purge($feature ? [$feature] : null))->middleware('web');
     $router->get('delete/{feature}', fn (string $feature) => Feature::delete($feature, null))->middleware('web');
 });
@@ -52,6 +53,18 @@ it('should be able to get a value from cookies', function () {
         ->withCookie($cookieKey, $cookieValue)
         ->get('/feature-route')
         ->assertSee('some-other-feature-value');
+});
+
+it('should be able to resolve boolean values for features', function () {
+    Feature::define('some-feature', fn () => true);
+
+    $cookieKey = 'laravel_pennant_cookie';
+    $cookieValue = json_encode(['some-feature' => [ Feature::serializeScope(null) => false ]]);
+
+    $this
+        ->withCookie($cookieKey, $cookieValue)
+        ->get('/value/some-feature')
+        ->assertSee('false');
 });
 
 it('should return a cookie for a resolved feature', function () {
